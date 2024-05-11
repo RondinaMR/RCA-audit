@@ -1,0 +1,10 @@
+name: rca-audit
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - pandas
+  - conda-forge::openpyxl
+  - matplotlib
+prefix: /home/mr/miniconda3/envs/rca-audit
