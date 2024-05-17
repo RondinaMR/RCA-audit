@@ -7,4 +7,3 @@ dependencies:
   - pandas
   - conda-forge::openpyxl
   - matplotlib
-prefix: /home/mr/miniconda3/envs/rca-audit
