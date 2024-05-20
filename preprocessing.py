@@ -44,4 +44,12 @@ def preprocess(df, column_prices):
     df['top123'] = df.apply(lambda row: [value for value in [row['top1'], row['top2'], row['top3']] if not pd.isnull(value)], axis=1)
     df['top12345'] = df.apply(lambda row: [value for value in [row['top1'], row['top2'], row['top3'], row['top4'], row['top5']] if not pd.isnull(value)], axis=1)
 
-    return df
+    exploded_top3_df = df.explode('top123').reset_index(drop=True)
+    exploded_top3_df = exploded_top3_df.infer_objects()
+    exploded_top3_df['class'] = pd.Categorical(exploded_top3_df['class'], ["1", "4", "9", "18"])
+
+    exploded_top5_df = df.explode('top12345').reset_index(drop=True)
+    exploded_top5_df = exploded_top5_df.infer_objects()
+    exploded_top5_df['class'] = pd.Categorical(exploded_top5_df['class'], ["1", "4", "9", "18"])
+
+    return df, exploded_top3_df, exploded_top5_df

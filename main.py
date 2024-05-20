@@ -45,10 +45,9 @@ BIGGER_SIZE = 12
 df = pd.read_csv('data/all_data_preprocessed.csv', sep=';', dtype={'age': 'str', 'class':'str', 'km_driven': 'str'})
 
 # Preprocess the dataframe
-df = preprocessing.preprocess(df, column_prices)
+df, exploded_top3_df, exploded_top5_df = preprocessing.preprocess(df, column_prices)
 
-exploded_top3_df = df.explode('top123').reset_index(drop=True)
-exploded_top3_df = exploded_top3_df.infer_objects()
+
 # exploded_top3_df.to_csv('data/exploded_data.csv', sep=';', index=False)
 # print(exploded_top3_df['top123'].value_counts())
 # print("np.where")
@@ -65,8 +64,14 @@ plotting.rq1_topn(df, features, 'top1', 'Top 1 Value')
 print("top3 boxplot")
 plotting.rq1_topn(exploded_top3_df, features, 'top123', 'Top 3 Value')
 
+print("top5 boxplot")
+plotting.rq1_topn(exploded_top5_df, features, 'top12345', 'Top 5 Value')
+
 print("top1&top3 boxplots stacked")
 plotting.rq1_topm_topn(df, exploded_top3_df, features, column1='top1', column2='top123', ylabel1='Top 1', ylabel2='Top 3')
+
+print("top1&top5 boxplots stacked")
+plotting.rq1_topm_topn(df, exploded_top5_df, features, column1='top1', column2='top12345', ylabel1='Top 1', ylabel2='Top 5')
 
 
 #Frequency of quote

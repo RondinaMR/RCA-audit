@@ -9,7 +9,8 @@ def rq1_topn(df, features, column, ylabel):
     for i, feature in enumerate(features):
         grouped_data = df.groupby(feature, observed=True)
         labels = df[feature].unique().tolist()
-        labels.sort()
+        if feature != 'class':
+            labels.sort()
         groups = [grouped_data.get_group(label)[column].values.tolist() for label in labels]
         axs[i].boxplot(groups, labels=labels)
         axs[i].set_title(f'{feature}')
@@ -31,7 +32,8 @@ def rq1_topm_topn(df1, df2, features, column1='top1', column2='top123', ylabel1=
         # Create boxplot impact topm
         grouped_data = df1.groupby(feature, observed=True)
         labels = df1[feature].unique().tolist()
-        labels.sort()
+        if feature != 'class':
+            labels.sort()
         groups_top1 = [grouped_data.get_group(label)[column1] for label in labels]
         axs[0, i].boxplot(groups_top1, labels=labels)
         axs[0, i].set_xticks([])
@@ -44,7 +46,8 @@ def rq1_topm_topn(df1, df2, features, column1='top1', column2='top123', ylabel1=
         # Create boxplot impact topn
         grouped_data = df2.groupby(feature, observed=True)
         labels = df2[feature].unique().tolist()
-        labels.sort()
+        if feature != 'class':
+            labels.sort()
         groups_top3 = [grouped_data.get_group(label)[column2] for label in labels]
         axs[1, i].boxplot(groups_top3, labels=labels)
         if i == 0:
@@ -56,7 +59,7 @@ def rq1_topm_topn(df1, df2, features, column1='top1', column2='top123', ylabel1=
     plt.tight_layout(pad=0.1)
     plt.subplots_adjust(wspace=0, hspace=0)
     # Save the plot
-    plt.savefig('plots/1_top1-top3_all.pdf')
+    plt.savefig(f'plots/1_{column1}-{column2}_all.pdf')
     # plt.show()
     return
 
