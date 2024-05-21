@@ -3,8 +3,20 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
 def rq1_topn(df, features, column, ylabel):
+    """
+    Generate boxplots for each feature in the given DataFrame.
+
+    Parameters:
+    - df (pandas.DataFrame): The DataFrame containing the data.
+    - features (list): A list of column names to use as features.
+    - column (str): The column name to use for the boxplot.
+    - ylabel (str): The label for the y-axis.
+
+    Returns:
+    None
+    """
     # Create a figure with subplots for all the plots figsize=(10, 10)
-    fig, axs = plt.subplots(1, len(features),figsize=(25, 10))
+    fig, axs = plt.subplots(1, len(features), figsize=(25, 10))
     # Iterate over each feature and create the corresponding plot
     for i, feature in enumerate(features):
         grouped_data = df.groupby(feature, observed=True)
@@ -21,7 +33,22 @@ def rq1_topn(df, features, column, ylabel):
     return
 
 def rq1_topm_topn(df1, df2, features, column1='top1', column2='top123', ylabel1='Top 1', ylabel2='Top 3'):
-    # topm and topn boxplots stacked
+    """
+    Generate stacked boxplots to visualize the impact of different features on topm and topn values.
+
+    Parameters:
+    - df1 (pandas.DataFrame): The first DataFrame containing the data for topm values.
+    - df2 (pandas.DataFrame): The second DataFrame containing the data for topn values.
+    - features (list): A list of features to be analyzed.
+    - column1 (str): The column name for topm values in df1 (default: 'top1').
+    - column2 (str): The column name for topn values in df2 (default: 'top123').
+    - ylabel1 (str): The label for the y-axis of the topm boxplots (default: 'Top 1').
+    - ylabel2 (str): The label for the y-axis of the topn boxplots (default: 'Top 3').
+
+    Returns:
+    None
+    """
+
     plt.rc('axes', labelsize=30)    # fontsize of the x and y labels
     plt.rc('xtick', labelsize=20)    # fontsize of the tick labels
     plt.rc('ytick', labelsize=20)    # fontsize of the tick labels
@@ -64,6 +91,19 @@ def rq1_topm_topn(df1, df2, features, column1='top1', column2='top123', ylabel1=
     return
 
 def rq3_frequency(df, features, companies, aggregation='count', filename='3_frequency.pdf'):
+    """
+    Plot the frequency of a feature for different companies.
+
+    Parameters:
+    - df: DataFrame - The input DataFrame.
+    - features: list - The list of features to plot.
+    - companies: list - The list of companies to plot.
+    - aggregation: str, optional - The aggregation method to use. Default is 'count'.
+    - filename: str, optional - The filename to save the plot. Default is '3_frequency.pdf'.
+
+    Returns:
+    None
+    """
     plt.rc('axes', labelsize=30)    # fontsize of the x and y labels
     plt.rc('xtick', labelsize=25)    # fontsize of the tick labels
     plt.rc('ytick', labelsize=25)    # fontsize of the tick labels
