@@ -4,6 +4,7 @@ import matplotlib.ticker as mtick
 import numpy as np
 import preprocessing
 import plotting
+import discrimination_analysis
 
 # Set pandas option to display all columns
 pd.set_option('display.max_columns', None)
@@ -73,10 +74,30 @@ plotting.rq1_topm_topn(df, exploded_top3_df, features, column1='top1', column2='
 print("top1&top5 boxplots stacked")
 plotting.rq1_topm_topn(df, exploded_top5_df, features, column1='top1', column2='top12345', ylabel1='Top 1', ylabel2='Top 5')
 
+print("rq2 discrimination analysis")
+bp_ro = discrimination_analysis.differences_distribution(df, 'birthplace', 'RO', 'MI', 'top1')
+bp_na = discrimination_analysis.differences_distribution(df, 'birthplace', 'NA', 'MI', 'top1')
+bp_ma = discrimination_analysis.differences_distribution(df, 'birthplace', 'MA', 'MI', 'top1')
+bp_cn = discrimination_analysis.differences_distribution(df, 'birthplace', 'CN', 'MI', 'top1')
+gd_fem = discrimination_analysis.differences_distribution(df, 'gender', 'F', 'M', 'top1')
+pr_emp = discrimination_analysis.differences_distribution(df, 'profession', 'Emp', 'LfaJ', 'top1')
+ed_msc = discrimination_analysis.differences_distribution(df, 'education', 'MSc', 'WaQ', 'top1')
+ms_sin = discrimination_analysis.differences_distribution(df, 'marital_status', 'Sin', 'Wid', 'top1')
+# control pairs
+df_duplicates = df[df.duplicated(subset=features, keep=False)].sort_values(by=features)
+df_duplicates['top1_diff'] = df_duplicates.groupby(features, observed=True)['top1'].transform(lambda x: x.diff())
+df_duplicates = df_duplicates.dropna(subset=['top1_diff'])
+cp = discrimination_analysis.compute_distribution(df_duplicates, 'top1_diff', 'control pairs')
+# Combine the dataframes
+combined_df = pd.concat([bp_ro, bp_na, bp_ma, bp_cn, gd_fem, pr_emp, ed_msc, ms_sin, cp], ignore_index=True)
+combined_df.to_latex("tables/rq2_discrimination_analysis_top1.tex", index=False, caption='Discrimination Analysis Results', label='table:discrimination_analysis')
+print(combined_df)
 
-#Frequency of quote
+
+# RQ3 Frequency of quote
 print("frequency of quotes _a service")
 plotting.rq3_frequency(df, features, output_variability_companies_a, aggregation='count', filename='3_frequency_a_service.pdf')
 
 print("frequency of quotes _any service")
 plotting.rq3_frequency(df, features, output_variability_companies_any, aggregation='sum', filename='3_frequency_any_service.pdf')
+
