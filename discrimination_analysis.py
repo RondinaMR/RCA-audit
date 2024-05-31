@@ -128,3 +128,43 @@ def differences_distribution(df, column, test_value, baseline_value, diff_column
     # print(stats.ttest_ind(df_merged[f'{diff_column}'].to_numpy(),df_merged[f'{diff_column}_test'].to_numpy()))
 
     return results_df
+
+def control_pairs(df_original, df_cp, features, column_name, debug=False):
+    """
+    Compute control pairs for a given DataFrame.
+
+    Args:
+        df (DataFrame): The input DataFrame.
+        features (list): List of column names to consider for identifying duplicates.
+        column_name (str, optional): The column name to compute the difference for. Defaults to 'top1'.
+
+    Returns:
+        DataFrame: The computed control pairs.
+
+    """
+    # Use the original Dataframe, find duplicates, and use them as control pairs
+    # df = df_original.copy()
+    # df_copy = df[df.duplicated(subset=features, keep='first')].sort_values(by=features)
+    # if debug:
+    #     print(f'#duplicates: {df.shape[0]}')
+    #     df.to_csv(f'data/2_duplicates_{column_name}.csv', sep=';', index=False)
+    # df = df.merge(df_copy, how='inner', on=features, suffixes=('', '_cp'))
+    # df[f'{column_name}_diff'] = df[f'{column_name}_cp'] - df[column_name]
+    # # df[f'{column_name}_diff'] = df.groupby(features, observed=True)[column_name].transform(lambda x: x.diff())
+    # # df = df.dropna(subset=[f'{column_name}_diff'])
+    # cp1 = compute_distribution(df, f'{column_name}_diff', 'control pairs 1')
+    # if debug:
+    #     print(f'#control_pairs: {df.shape[0]}')
+    #     df.to_csv(f'data/2_control_pairs-1_{column_name}.csv', sep=';', index=False)
+
+
+    # Merge the original DataFrame with the control pairs DataFrame
+    df = df_original.copy()
+    df = df.merge(df_cp, how='inner', on=features, suffixes=('', '_cp'))
+    df[f'{column_name}_diff'] = df[f'{column_name}_cp'] - df[column_name]
+    cp = compute_distribution(df, f'{column_name}_diff', 'control pairs')
+
+    if debug:
+        print(f'#control_pairs: {df.shape[0]}')
+        df.to_csv(f'data/2_control_pairs_{column_name}.csv', sep=';', index=False)
+    return cp
