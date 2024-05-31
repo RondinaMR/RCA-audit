@@ -1,6 +1,6 @@
 import pandas as pd
 
-def compute_distribution(df, column, attribute_description=None, pairs_description=None):
+def compute_distribution(df, column, attribute_description=None, pairs_description=None, debug=False):
     """
     Compute the distribution of a given column in a DataFrame.
 
