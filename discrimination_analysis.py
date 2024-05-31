@@ -108,13 +108,13 @@ def differences_distribution(df, column, test_value, baseline_value, diff_column
     
     if debug:
         # print(f'df_base\n{df_base.head()}')
-        df_base.to_csv(f'data/2_base_data_{column}_{baseline_value}.csv', sep=';', index=False)
-        df_test.to_csv(f'data/2_test_data_{column}_{test_value}.csv', sep=';', index=False)
+        df_base.to_csv(f'debug/2_base_data_{column}_{baseline_value}.csv', sep=';', index=False)
+        df_test.to_csv(f'debug/2_test_data_{column}_{test_value}.csv', sep=';', index=False)
         # print(f'df_test\n{df_test.head()}')
         # print(f'df_merged\n{df_merged.head()}')
         print(f'{column} / {test_value}vs{baseline_value}: {df_base.shape} / {df_test.shape} / merged: {df_merged.shape}')
         df_sorted = df_merged.sort_values(by=f'{diff_column}_diff')
-        df_sorted.to_csv(f'data/2_merged_data_{column}_{test_value}vs{baseline_value}.csv', sep=';', index=False)
+        df_sorted.to_csv(f'debug/2_merged_data_{column}_{test_value}vs{baseline_value}.csv', sep=';', index=False)
     
     results_df = compute_distribution(df_merged, f'{diff_column}_diff', column, f'{test_value} vs {baseline_value}', debug=debug)
     
@@ -147,7 +147,7 @@ def control_pairs(df_original, df_cp, features, column_name, debug=False):
     # df_copy = df[df.duplicated(subset=features, keep='first')].sort_values(by=features)
     # if debug:
     #     print(f'#duplicates: {df.shape[0]}')
-    #     df.to_csv(f'data/2_duplicates_{column_name}.csv', sep=';', index=False)
+    #     df.to_csv(f'debug/2_duplicates_{column_name}.csv', sep=';', index=False)
     # df = df.merge(df_copy, how='inner', on=features, suffixes=('', '_cp'))
     # df[f'{column_name}_diff'] = df[f'{column_name}_cp'] - df[column_name]
     # # df[f'{column_name}_diff'] = df.groupby(features, observed=True)[column_name].transform(lambda x: x.diff())
@@ -155,7 +155,7 @@ def control_pairs(df_original, df_cp, features, column_name, debug=False):
     # cp1 = compute_distribution(df, f'{column_name}_diff', 'control pairs 1')
     # if debug:
     #     print(f'#control_pairs: {df.shape[0]}')
-    #     df.to_csv(f'data/2_control_pairs-1_{column_name}.csv', sep=';', index=False)
+    #     df.to_csv(f'debug/2_control_pairs-1_{column_name}.csv', sep=';', index=False)
 
 
     # Merge the original DataFrame with the control pairs DataFrame
@@ -166,5 +166,5 @@ def control_pairs(df_original, df_cp, features, column_name, debug=False):
 
     if debug:
         print(f'#control_pairs: {df.shape[0]}')
-        df.to_csv(f'data/2_control_pairs_{column_name}.csv', sep=';', index=False)
+        df.to_csv(f'debug/2_control_pairs_{column_name}.csv', sep=';', index=False)
     return cp

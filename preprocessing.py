@@ -72,6 +72,6 @@ def preprocess(df, column_prices, features, debug=False):
     columns_to_drop = ['top12345', 'top2', 'top3', 'top4', 'top5']
     # columns_to_drop.extend(column_prices)
     df = df.drop(columns=columns_to_drop)
-    df.to_csv('data/top_data.csv', sep=';', index=False)
+    df.to_csv('debug/top_data.csv', sep=';', index=False)
 
     return df
