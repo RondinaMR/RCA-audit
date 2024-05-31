@@ -26,6 +26,10 @@ def compute_distribution(df, column, attribute_description=None, pairs_descripti
     average = df[column].mean()
     quantile_5th = df[column].quantile(0.05)
     quantile_95th = df[column].quantile(0.95)
+    M, p_value = sign_test(df[column], mu0=0)
+    if debug:
+        print(f'[compute_distribution][column:{column}] M: {M}, p-value: {p_value}')
+    
 
     # Compute the percentage of '{column}_diff' values between -5 and +5
     ties5 = (df[(df[column] >= -5) & (df[column] <= 5)].shape[0] / df.shape[0]) * 100
@@ -34,16 +38,26 @@ def compute_distribution(df, column, attribute_description=None, pairs_descripti
         attribute_description = ''
     if pairs_description is None:
         pairs_description = ''
+    
+    alpha = 0.05
+    # bonferroni_divisor = 9 
+    # alpha_corrected = alpha / bonferroni_divisor
+
+    if p_value < alpha:
+        p_value_str = f'\\textbf{{<{alpha:.2f}}}'
+    else:
+        p_value_str = f'{p_value:.2f}'
 
     # Create a dataframe with the results
     results_df = pd.DataFrame({
         'Attribute': attribute_description,
         'Pairs': pairs_description,
-        'Ties5': f'{ties5:.0f}%',
+        'Ties5': f'{ties5:.0f}\\%',
         '.05()': f'{quantile_5th:.0f} €',
         '.50()': f'{median:.0f} €',
         '.95()': f'{quantile_95th:.0f} €',
         'm()': f'{average:.0f} €',
+        'p-value': p_value_str
     }, index=[0])
 
     return results_df
