@@ -45,7 +45,7 @@ BIGGER_SIZE = 12
 
 # Read the csv file and create a dataframe
 df = pd.read_csv('data/all_data_preprocessed.csv', sep=';', dtype={'age': 'str', 'class':'str', 'km_driven': 'str'})
-
+cp_df = pd.read_csv('data/preprocessed_control_queries.csv', sep=';', dtype={'age': 'str', 'class':'str', 'km_driven': 'str'})
 # Preprocess the dataframe
 
 print("Starting preprocessing...")
