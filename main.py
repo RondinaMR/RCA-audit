@@ -123,7 +123,7 @@ ms_wid = discrimination_analysis.differences_distribution(df, 'marital_status', 
 ed_msc = discrimination_analysis.differences_distribution(df, 'education', 'WaQ', 'MSc', 'top5avg')
 pr_emp = discrimination_analysis.differences_distribution(df, 'profession', 'LfaJ', 'Emp', 'top5avg')
 # control pairs
-cp = discrimination_analysis.control_pairs(df, cp_df, features, 'top5avg', debug=True)
+cp = discrimination_analysis.control_pairs(df, cp_df, features, 'top5avg')
 # Combine the dataframes
 rq2_top5_df = pd.concat([gd_fem, bp_ro, bp_na, bp_ma, bp_cn, age, city, ms_sin, ms_wid, ed_msc, pr_emp, cp], ignore_index=True)
 rq2_top5_df.to_latex("tables/rq2_discrimination_analysis_top5.tex", index=False, caption='Discrimination Analysis Results', label='table:discrimination_analysis')
