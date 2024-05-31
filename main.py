@@ -34,7 +34,7 @@ pd.set_option('display.max_columns', None)
 demographic_features = ['gender', 'birthplace', 'age', 'city', 'marital_status', 'education', 'profession']
 driver_features = ['car', 'km_driven', 'class']
 features = demographic_features + driver_features
-column_prices = ['C1/a', 'C1/b', 'C1/c', 'C2/a', 'C2/b', 'C2/c', 'C3/a', 'C3/b', 'C3/c', 'C3/d', 'C4/a', 'C5/a', 'C5/b', 'C6/a']
+column_prices = ['C1/a', 'C1/b', 'C1/c', 'C1/d', 'C2/a', 'C2/b', 'C2/c', 'C3/a', 'C3/b', 'C3/c', 'C3/d', 'C4/a', 'C5/a', 'C5/b', 'C6/a']
 output_variability_companies_a = ['C1/a', 'C2/a', 'C3/a', 'C4/a', 'C5/a', 'C6/a']
 output_variability_companies_any = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6']
 
