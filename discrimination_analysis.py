@@ -6,6 +6,11 @@ from statsmodels.stats.descriptivestats import sign_test
 def compute_distribution(df, column, attribute_description=None, pairs_description=None, debug=False):
     """
     Compute the distribution of a given column in a DataFrame.
+    From statsmodels.stats.descriptivestats.sign_test:
+        The signs test returns M = (N(+) - N(-))/2
+        where N(+) is the number of values above mu0, N(-) is the number of values below. Values equal to mu0 are discarded.
+        The p-value for M is calculated using the binomial distribution and can be interpreted the same as for a t-test. 
+        The test-statistic is distributed Binom(min(N(+), N(-)), n_trials, .5) where n_trials equals N(+) + N(-).
 
     Parameters:
     - df (pandas.DataFrame): The DataFrame containing the data.
