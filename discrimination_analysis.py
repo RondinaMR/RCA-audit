@@ -63,7 +63,7 @@ def compute_distribution(df, column, attribute_description=None, pairs_descripti
     return results_df
 
 
-def differences_distribution(df, column, test_value, baseline_value, diff_column):
+def differences_distribution(df, column, test_value, baseline_value, diff_column, debug=False):
     """
     Compute the distribution of differences between two groups in a DataFrame.
 
