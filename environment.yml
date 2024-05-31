@@ -7,3 +7,6 @@ dependencies:
   - pandas
   - conda-forge::openpyxl
   - matplotlib
+  - conda-forge::jinja2
+  - conda-forge::scipy
+  - conda-forge::statsmodels
