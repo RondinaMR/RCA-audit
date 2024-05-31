@@ -93,24 +93,38 @@ def differences_distribution(df, column, test_value, baseline_value, diff_column
     merge_on = columns.copy()
     merge_on.remove(column)
     merge_on.remove(diff_column)
-    
-    debug = False
 
-    df = df[columns]
+    df_original = df[columns]
+
+    df = df_original.drop_duplicates(subset=columns_features)
+    num_rows_deleted = df_original.shape[0] - df.shape[0]
+    if debug:
+        print(f'Number of rows deleted: {num_rows_deleted}')
 
     df_base = df[df[column] == baseline_value].sort_values(by=columns_features)
     df_test = df[df[column] == test_value].sort_values(by=columns_features)
-    df_merged = df_base.merge(df_test, on=merge_on, suffixes=('', '_test'))
+    df_merged = df_base.merge(df_test, how='inner', on=merge_on, suffixes=('', '_test'))
     df_merged[f'{diff_column}_diff'] = df_merged[f'{diff_column}_test'] - df_merged[diff_column]
     
     if debug:
-        print(f'df_base\n{df_base.head()}')
-        print(f'df_test\n{df_test.head()}')
-        print(f'df_merged\n{df_merged.head()}')
+        # print(f'df_base\n{df_base.head()}')
+        df_base.to_csv(f'data/2_base_data_{column}_{baseline_value}.csv', sep=';', index=False)
+        df_test.to_csv(f'data/2_test_data_{column}_{test_value}.csv', sep=';', index=False)
+        # print(f'df_test\n{df_test.head()}')
+        # print(f'df_merged\n{df_merged.head()}')
         print(f'{column} / {test_value}vs{baseline_value}: {df_base.shape} / {df_test.shape} / merged: {df_merged.shape}')
         df_sorted = df_merged.sort_values(by=f'{diff_column}_diff')
-        df_sorted.to_csv(f'data/merged_data_{column}_{test_value}vs{baseline_value}.csv', sep=';', index=False)
+        df_sorted.to_csv(f'data/2_merged_data_{column}_{test_value}vs{baseline_value}.csv', sep=';', index=False)
     
-    results_df = compute_distribution(df_merged, f'{diff_column}_diff', column, f'{test_value} vs {baseline_value}')
+    results_df = compute_distribution(df_merged, f'{diff_column}_diff', column, f'{test_value} vs {baseline_value}', debug=debug)
     
+    # TODO: Perform t-test on the differences
+    # https://stackoverflow.com/questions/59694680/how-do-i-perform-a-t-test-from-a-dataframe
+    # var_base = df_base["hourly_wage"].to_numpy()
+    # var_test = df_test["hourly_wage"].to_numpy()
+    # stats.ttest_ind(m,f)
+    #compute p-value
+    # print(df_merged.head())
+    # print(stats.ttest_ind(df_merged[f'{diff_column}'].to_numpy(),df_merged[f'{diff_column}_test'].to_numpy()))
+
     return results_df
