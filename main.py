@@ -5,6 +5,7 @@ import numpy as np
 import preprocessing
 import plotting
 import discrimination_analysis
+import time
 
 # Set pandas option to display all columns
 pd.set_option('display.max_columns', None)
@@ -46,8 +47,16 @@ BIGGER_SIZE = 12
 df = pd.read_csv('data/all_data_preprocessed.csv', sep=';', dtype={'age': 'str', 'class':'str', 'km_driven': 'str'})
 
 # Preprocess the dataframe
-df, exploded_top3_df, exploded_top5_df = preprocessing.preprocess(df, column_prices)
 
+print("Starting preprocessing...")
+start_time = time.time()
+
+df = preprocessing.preprocess(df, column_prices, features)
+cp_df = preprocessing.preprocess(cp_df, column_prices, features)
+
+end_time = time.time()
+execution_time = end_time - start_time
+print(f"Preprocessing done in {execution_time:.0f} seconds.")
 
 # exploded_top3_df.to_csv('data/exploded_data.csv', sep=';', index=False)
 # print(exploded_top3_df['top123'].value_counts())
