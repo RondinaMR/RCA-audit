@@ -1,0 +1,22 @@
+\begin{table}
+\caption{Discrimination Analysis Results}
+\label{table:discrimination_analysis}
+\begin{tabular}{llllllll}
+\toprule
+Attribute & Pairs & Ties5 & .05() & .50() & .95() & m() & p-value \\
+\midrule
+gender & F vs M & 89\% & -14 € & 0 € & 6 € & 4 € & 0.72 \\
+birthplace & RO vs MI & 25\% & 0 € & 8 € & 10 € & 7 € & \textbf{<0.05} \\
+birthplace & NA vs MI & 10\% & -8 € & 29 € & 538 € & 92 € & \textbf{<0.05} \\
+birthplace & MA vs MI & 0\% & -255 € & 125 € & 539 € & 148 € & \textbf{<0.05} \\
+birthplace & CN vs MI & 10\% & -104 € & 103 € & 395 € & 118 € & \textbf{<0.05} \\
+age & 25 vs 32 & 1\% & -1 € & 64 € & 549 € & 141 € & \textbf{<0.05} \\
+city & NA vs MI & 31\% & -255 € & 147 € & 1752 € & 367 € & \textbf{<0.05} \\
+marital_status & Sin vs Mar & 79\% & -33 € & 0 € & 83 € & -1 € & \textbf{<0.05} \\
+marital_status & Wid vs Mar & 79\% & -30 € & 0 € & 183 € & 9 € & \textbf{<0.05} \\
+education & WaQ vs MSc & 77\% & -9 € & 0 € & 491 € & 60 € & \textbf{<0.05} \\
+profession & LfaJ vs Emp & 70\% & -377 € & 0 € & 283 € & 24 € & \textbf{<0.05} \\
+control pairs &  & 98\% & 0 € & 0 € & 0 € & 7 € & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
