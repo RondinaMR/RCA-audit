@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+from scipy import stats
+from statsmodels.stats.descriptivestats import sign_test
 
 def compute_distribution(df, column, attribute_description=None, pairs_description=None, debug=False):
     """
