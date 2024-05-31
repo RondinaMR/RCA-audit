@@ -62,6 +62,17 @@ def compute_distribution(df, column, attribute_description=None, pairs_descripti
 
     return results_df
 
+def create_diff_df(df, column, test_value, baseline_value, diff_column, columns_merge, debug=False):
+    df_base = df[df[column] == baseline_value]
+    df_test = df[df[column] == test_value]
+    df_merged = df_base.merge(df_test, how='inner', on=columns_merge, suffixes=('', '_test'))
+    df_merged[f'{diff_column}_diff'] = df_merged[f'{diff_column}_test'] - df_merged[diff_column]
+    if debug:
+        df_base.to_csv(f'debug/2_base_data_{column}_{baseline_value}.csv', sep=';', index=False)
+        df_test.to_csv(f'debug/2_test_data_{column}_{test_value}.csv', sep=';', index=False)
+        print(f'{column} / {test_value}vs{baseline_value}: {df_base.shape} / {df_test.shape} / merged: {df_merged.shape}')
+    return df_merged
+
 
 def differences_distribution(df, column, test_value, baseline_value, diff_column, debug=False):
     """
@@ -101,18 +112,9 @@ def differences_distribution(df, column, test_value, baseline_value, diff_column
     if debug:
         print(f'Number of rows deleted: {num_rows_deleted}')
 
-    df_base = df[df[column] == baseline_value].sort_values(by=columns_features)
-    df_test = df[df[column] == test_value].sort_values(by=columns_features)
-    df_merged = df_base.merge(df_test, how='inner', on=merge_on, suffixes=('', '_test'))
-    df_merged[f'{diff_column}_diff'] = df_merged[f'{diff_column}_test'] - df_merged[diff_column]
+    df_merged = create_diff_df(df, column, test_value, baseline_value, diff_column, merge_on, debug=debug)
     
     if debug:
-        # print(f'df_base\n{df_base.head()}')
-        df_base.to_csv(f'debug/2_base_data_{column}_{baseline_value}.csv', sep=';', index=False)
-        df_test.to_csv(f'debug/2_test_data_{column}_{test_value}.csv', sep=';', index=False)
-        # print(f'df_test\n{df_test.head()}')
-        # print(f'df_merged\n{df_merged.head()}')
-        print(f'{column} / {test_value}vs{baseline_value}: {df_base.shape} / {df_test.shape} / merged: {df_merged.shape}')
         df_sorted = df_merged.sort_values(by=f'{diff_column}_diff')
         df_sorted.to_csv(f'debug/2_merged_data_{column}_{test_value}vs{baseline_value}.csv', sep=';', index=False)
     
@@ -167,4 +169,5 @@ def control_pairs(df_original, df_cp, features, column_name, debug=False):
     if debug:
         print(f'#control_pairs: {df.shape[0]}')
         df.to_csv(f'debug/2_control_pairs_{column_name}.csv', sep=';', index=False)
+    
     return cp
