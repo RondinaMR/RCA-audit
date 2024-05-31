@@ -9,6 +9,7 @@ import time
 
 # Set pandas option to display all columns
 pd.set_option('display.max_columns', None)
+pd.set_option('display.expand_frame_repr', False)
 
 # def plot_boxplot_impact_top1(df, variable):
 #     grouped_data = df.groupby(variable)
