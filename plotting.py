@@ -90,7 +90,7 @@ def rq1_topm_topn(df1, df2, features, column1='top1', column2='top123', ylabel1=
     # plt.show()
     return
 
-def rq3_frequency(df, features, companies, aggregation='count', filename='3_frequency.pdf'):
+def rq3_frequency(df, features, companies, aggregation='count', filename='3_frequency'):
     """
     Plot the frequency of a feature for different companies.
 
@@ -99,7 +99,7 @@ def rq3_frequency(df, features, companies, aggregation='count', filename='3_freq
     - features: list - The list of features to plot.
     - companies: list - The list of companies to plot.
     - aggregation: str, optional - The aggregation method to use. Default is 'count'.
-    - filename: str, optional - The filename to save the plot. Default is '3_frequency.pdf'.
+    - filename: str, optional - The filename to save the plot. Default is '3_frequency'.
 
     Returns:
     None
@@ -143,7 +143,8 @@ def rq3_frequency(df, features, companies, aggregation='count', filename='3_freq
     # Adjust the spacing between subplots
     plt.tight_layout(pad=0.1)
     plt.subplots_adjust(wspace=0, hspace=0)
-    plt.savefig(f'plots/{filename}')
+    plt.savefig(f'plots/{filename}.pdf')
+    plt.savefig(f'plots/{filename}.png')
     return
 
 def rq1_diff_boxplots(df):

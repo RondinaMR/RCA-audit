@@ -150,8 +150,8 @@ plotting.rq1_diff_boxplots(rq1_top5_plot_df)
 
 # RQ3 Frequency of quote
 print("frequency of quotes _a service")
-plotting.rq3_frequency(df, features, output_variability_companies_a, aggregation='count', filename='3_frequency_a_service.pdf')
+plotting.rq3_frequency(df, features, output_variability_companies_a, aggregation='count', filename='3_frequency_a_service')
 
 print("frequency of quotes _any service")
-plotting.rq3_frequency(df, features, output_variability_companies_any_meaningful, aggregation='sum', filename='3_frequency_any_service.pdf')
+plotting.rq3_frequency(df, features, output_variability_companies_any_meaningful, aggregation='sum', filename='3_frequency_any_service')
 
