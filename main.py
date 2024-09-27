@@ -144,9 +144,11 @@ city_q_n = discrimination_analysis.differences_distribution(df, 'city', 'NA', 'M
 ms_wid_q_n = discrimination_analysis.differences_distribution(df, 'marital_status', 'Wid', 'Mar', 'top5avg', quartiles=True, numeric=True)
 ed_msc_q_n = discrimination_analysis.differences_distribution(df, 'education', 'WaQ', 'MSc', 'top5avg', quartiles=True, numeric=True)
 pr_emp_q_n = discrimination_analysis.differences_distribution(df, 'profession', 'LfaJ', 'Emp', 'top5avg', quartiles=True, numeric=True)
-rq1_top5_plot_df = pd.concat([gd_fem_q_n, bp_na_q_n, bp_ma_q_n, bp_cn_q_n, age_q_n, city_q_n, ms_wid_q_n, ed_msc_q_n, pr_emp_q_n], ignore_index=True)
+cp_q_n = discrimination_analysis.control_pairs(df, cp_df, features, 'top5avg', quartiles=True, numeric=True)
+rq1_top5_plot_df = pd.concat([gd_fem_q_n, bp_na_q_n, bp_ma_q_n, bp_cn_q_n, age_q_n, city_q_n, ms_wid_q_n, ed_msc_q_n, pr_emp_q_n, cp_q_n], ignore_index=True)
 print(rq1_top5_plot_df)
 plotting.rq1_diff_boxplots(rq1_top5_plot_df)
+plotting.rq1_diff_boxplots_with_ties(rq1_top5_plot_df)
 
 # RQ3 Frequency of quote
 print("frequency of quotes _a service")

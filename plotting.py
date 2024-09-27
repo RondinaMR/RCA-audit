@@ -185,5 +185,55 @@ def rq1_diff_boxplots(df):
     plt.tight_layout()
     plt.savefig('plots/diff_boxplots.pdf') #, transparent=True
     plt.savefig('plots/diff_boxplots.png') #, transparent=True
-    plt.show()
+    # plt.show()
+    return
     
+def rq1_diff_boxplots_with_ties(df):
+    plt.rc('axes', labelsize=32)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=24)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=24)    # fontsize of the tick labels
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(24, 12), gridspec_kw={'height_ratios': [4, 1]}, sharex=True)
+
+    labels = df.apply(lambda row: f"{row['Attribute']}\n{row['Pairs']}", axis=1)
+    data = [row[['.25()', '.50()', '.75()']].values for _, row in df.iterrows()]
+
+    boxprops = dict(linewidth=3)
+    medianprops = dict(linewidth=3, color='blue')
+    whiskerprops = dict(linewidth=3)
+    capprops = dict(linewidth=3)    
+
+    ax1.boxplot(data, labels=labels, boxprops=boxprops, medianprops=medianprops, whiskerprops=whiskerprops, capprops=capprops)
+    ax1.set_ylabel('Distribution of price differences')
+    control_pairs_value = data[-1][1]
+    ax1.axhline(y=control_pairs_value, color='grey', linestyle='--', linewidth=2)
+
+
+    # Plot the vertical bars based on the "Ties5" column
+    ties_values = df['Ties5'].values
+    colors = ['blue'] * len(labels)
+    colors[-1] = 'grey'
+    ax2.bar(range(1, len(labels) + 1), ties_values, color=colors, width=0.55, align='center')
+    control_pairs_value = ties_values[-1]
+    ax2.axhline(y=control_pairs_value, color='grey', linestyle='--', linewidth=2)
+    ax2.set_xticks(range(1, len(labels) + 1))
+    ax2.set_xticklabels(labels)
+    ax2.set_ylabel('Ties 5€ (%)')
+    ax2.set_ylim(0, max(ties_values) * 1.1)
+
+    # Increment the line width of the frame of the figure
+    for spine in ax1.spines.values():
+        spine.set_linewidth(3)
+    for spine in ax2.spines.values():
+        spine.set_linewidth(3)
+
+    # Increment the line width of the ticks in the x and y axis
+    ax1.tick_params(axis='both', width=3)
+    ax2.tick_params(axis='both', width=3)
+
+    fig.align_labels()
+    plt.tight_layout()
+    plt.savefig('plots/diff_boxplots_with_ties.pdf', dpi=300) #, transparent=True
+    plt.savefig('plots/diff_boxplots_with_ties.png', dpi=300) #, transparent=True
+    # plt.show()
+    return
