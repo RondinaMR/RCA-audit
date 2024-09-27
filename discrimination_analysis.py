@@ -176,7 +176,7 @@ def differences_distribution(df, column, test_value, baseline_value, diff_column
 
     return results_df
 
-def control_pairs(df_original, df_cp, features, column_name, debug=False):
+def control_pairs(df_original, df_cp, features, column_name, quartiles=False, numeric=False, debug=False):
     """
     Compute control pairs for a given DataFrame.
 
@@ -184,6 +184,9 @@ def control_pairs(df_original, df_cp, features, column_name, debug=False):
         df (DataFrame): The input DataFrame.
         features (list): List of column names to consider for identifying duplicates.
         column_name (str, optional): The column name to compute the difference for. Defaults to 'top1'.
+        quartiles (bool, optional): Whether to compute the quartiles. Defaults to False.
+        numeric (bool, optional): Whether the column is numeric. Defaults to False.
+        debug (bool, optional): Whether to print debug information. Defaults to False.
 
     Returns:
         DataFrame: The computed control pairs.
@@ -209,7 +212,7 @@ def control_pairs(df_original, df_cp, features, column_name, debug=False):
     df = df_original.copy()
     df = df.merge(df_cp, how='inner', on=features, suffixes=('', '_cp'))
     df[f'{column_name}_diff'] = df[f'{column_name}_cp'] - df[column_name]
-    cp = compute_distribution(df, f'{column_name}_diff', 'control pairs')
+    cp = compute_distribution(df, f'{column_name}_diff', 'control pairs', quartiles=quartiles, numeric=numeric)
 
     if debug:
         print(f'#control_pairs: {df.shape[0]}')
