@@ -145,3 +145,44 @@ def rq3_frequency(df, features, companies, aggregation='count', filename='3_freq
     plt.subplots_adjust(wspace=0, hspace=0)
     plt.savefig(f'plots/{filename}')
     return
+
+def rq1_diff_boxplots(df):
+    """
+    Generate boxplots for each row in the DataFrame.
+
+    Parameters:
+    - df (pandas.DataFrame): The DataFrame containing the data.
+
+    Returns:
+    None
+    """
+    plt.rc('axes', labelsize=32)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=24)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=24)    # fontsize of the tick labels
+
+    fig, ax = plt.subplots(figsize=(24, 8))
+
+    labels = df.apply(lambda row: f"{row['Attribute']}\n{row['Pairs']}", axis=1)
+    data = [row[['.25()', '.50()', '.75()']].values for _, row in df.iterrows()]
+
+    boxprops = dict(linewidth=3)
+    medianprops = dict(linewidth=3, color='blue')
+    wiskerprops = dict(linewidth=3)
+    capprops = dict(linewidth=3)
+
+    # Increment the line width of the frame of the figure
+    for spine in ax.spines.values():
+        spine.set_linewidth(3)
+
+    # Increment the line width of the ticks in the x and y axis
+    ax.tick_params(axis='both', width=3)
+
+    ax.boxplot(data, labels=labels, boxprops=boxprops, medianprops=medianprops, whiskerprops=wiskerprops, capprops=capprops)
+    ax.set_ylabel('Distribution of price differences')
+    # ax.set_title('Boxplots for Each Row')
+    # plt.xticks(rotation=10)
+    plt.tight_layout()
+    plt.savefig('plots/diff_boxplots.pdf') #, transparent=True
+    plt.savefig('plots/diff_boxplots.png') #, transparent=True
+    plt.show()
+    

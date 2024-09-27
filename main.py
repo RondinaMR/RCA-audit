@@ -134,6 +134,19 @@ merged_df = pd.merge(rq2_top1_df, rq2_top5_df, on=['Attribute', 'Pairs'], suffix
 merged_df. replace({'Attribute': {'birthplace': 'Birthplace', 'gender': 'Gender', 'profession': 'Profession', 'education': 'Education', 'marital_status': 'Mar. Stat.', 'age': 'Age', 'city': 'City', 'control pairs 1': '\\multicolumn{2}{l|}{Control pairs (noise) 1}', 'control pairs 2': '\\multicolumn{2}{l|}{Control pairs (noise) 2}', 'control pairs':'\\multicolumn{2}{l|}{Control pairs (noise)}'}}, inplace=True)
 merged_df.to_latex("tables/rq2_discrimination_analysis_merged.tex", index=False, caption='Discrimination Analysis Results', label='table:discrimination_analysis')
 
+# Plot the discrimination analysis results
+gd_fem_q_n = discrimination_analysis.differences_distribution(df, 'gender', 'F', 'M', 'top5avg', quartiles=True, numeric=True)
+bp_na_q_n = discrimination_analysis.differences_distribution(df, 'birthplace', 'NA', 'MI', 'top5avg', quartiles=True, numeric=True)
+bp_ma_q_n = discrimination_analysis.differences_distribution(df, 'birthplace', 'MA', 'MI', 'top5avg', quartiles=True, numeric=True)
+bp_cn_q_n = discrimination_analysis.differences_distribution(df, 'birthplace', 'CN', 'MI', 'top5avg', quartiles=True, numeric=True)
+age_q_n = discrimination_analysis.differences_distribution(df, 'age', '25', '32', 'top5avg', quartiles=True, numeric=True)
+city_q_n = discrimination_analysis.differences_distribution(df, 'city', 'NA', 'MI', 'top5avg', quartiles=True, numeric=True)
+ms_wid_q_n = discrimination_analysis.differences_distribution(df, 'marital_status', 'Wid', 'Mar', 'top5avg', quartiles=True, numeric=True)
+ed_msc_q_n = discrimination_analysis.differences_distribution(df, 'education', 'WaQ', 'MSc', 'top5avg', quartiles=True, numeric=True)
+pr_emp_q_n = discrimination_analysis.differences_distribution(df, 'profession', 'LfaJ', 'Emp', 'top5avg', quartiles=True, numeric=True)
+rq1_top5_plot_df = pd.concat([gd_fem_q_n, bp_na_q_n, bp_ma_q_n, bp_cn_q_n, age_q_n, city_q_n, ms_wid_q_n, ed_msc_q_n, pr_emp_q_n], ignore_index=True)
+print(rq1_top5_plot_df)
+plotting.rq1_diff_boxplots(rq1_top5_plot_df)
 
 # RQ3 Frequency of quote
 print("frequency of quotes _a service")

@@ -3,7 +3,7 @@ import numpy as np
 from scipy import stats
 from statsmodels.stats.descriptivestats import sign_test
 
-def compute_distribution(df, column, attribute_description=None, pairs_description=None, debug=False):
+def compute_distribution(df, column, attribute_description=None, pairs_description=None, quartiles=False, numeric=False, debug=False):
     """
     Compute the distribution of a given column in a DataFrame.
     From statsmodels.stats.descriptivestats.sign_test:
@@ -17,14 +17,19 @@ def compute_distribution(df, column, attribute_description=None, pairs_descripti
     - column (str): The name of the column to compute the distribution for.
     - attribute_description (str, optional): Description of the attribute. Default is None.
     - pairs_description (str, optional): Description of the pairs. Default is None.
+    - quartiles (bool, optional): Whether to compute the quartiles. Default is False.
+    - numeric (bool, optional): Whether the column is numeric. Default is False.
+    - debug (bool, optional): Whether to print debug information. Default is False.
 
     Returns:
-    - results_df (pandas.DataFrame): A DataFrame containing the computed distribution. The columns are: 'Attribute', 'Pairs', 'Ties5', '.05()', '.50()', '.95()', 'm()'.
+    - results_df (pandas.DataFrame): A DataFrame containing the computed distribution. The columns are: 'Attribute', 'Pairs', 'Ties5', '.05()', '.50()', '.95()', 'm()' (quartiles = False) or 'Attribute', 'Pairs', 'Ties5', '.05()', '.25()', '.50()', '.75()', '.95()', 'm()' (quartiles = True).
 
     """
     median = df[column].median()
     average = df[column].mean()
     quantile_5th = df[column].quantile(0.05)
+    quantile_25th = df[column].quantile(0.25)
+    quantile_75th = df[column].quantile(0.75)
     quantile_95th = df[column].quantile(0.95)
     M, p_value = sign_test(df[column], mu0=0)
     if debug:
@@ -49,16 +54,54 @@ def compute_distribution(df, column, attribute_description=None, pairs_descripti
         p_value_str = f'{p_value:.2f}'
 
     # Create a dataframe with the results
-    results_df = pd.DataFrame({
-        'Attribute': attribute_description,
-        'Pairs': pairs_description,
-        'Ties5': f'{ties5:.0f}\\%',
-        '.05()': f'{quantile_5th:.0f} €',
-        '.50()': f'{median:.0f} €',
-        '.95()': f'{quantile_95th:.0f} €',
-        'm()': f'{average:.0f} €',
-        'p-value': p_value_str
-    }, index=[0])
+    if numeric and quartiles:
+        results_df = pd.DataFrame({
+            'Attribute': attribute_description,
+            'Pairs': pairs_description,
+            'Ties5': ties5,
+            '.05()': quantile_5th,
+            '.25()': quantile_25th,
+            '.50()': median,
+            '.75()': quantile_75th,
+            '.95()': quantile_95th,
+            'm()': average,
+            'p-value': p_value_str
+        }, index=[0])
+    elif numeric and not quartiles:
+        results_df = pd.DataFrame({
+            'Attribute': attribute_description,
+            'Pairs': pairs_description,
+            'Ties5': ties5,
+            '.05()': quantile_5th,
+            '.50()': median,
+            '.95()': quantile_95th,
+            'm()': average,
+            'p-value': p_value_str
+        }, index=[0])
+    elif not numeric and quartiles:
+        results_df = pd.DataFrame({
+            'Attribute': attribute_description,
+            'Pairs': pairs_description,
+            'Ties5': f'{ties5:.0f}\\%',
+            '.05()': f'{quantile_5th:.0f} €',
+            '.25()': f'{quantile_25th:.0f} €',
+            '.50()': f'{median:.0f} €',
+            '.75()': f'{quantile_75th:.0f} €',
+            '.95()': f'{quantile_95th:.0f} €',
+            'm()': f'{average:.0f} €',
+            'p-value': p_value_str
+        }, index=[0])
+    else:
+        results_df = pd.DataFrame({
+            'Attribute': attribute_description,
+            'Pairs': pairs_description,
+            'Ties5': f'{ties5:.0f}\\%',
+            '.05()': f'{quantile_5th:.0f} €',
+            '.50()': f'{median:.0f} €',
+            '.95()': f'{quantile_95th:.0f} €',
+            'm()': f'{average:.0f} €',
+            'p-value': p_value_str
+        }, index=[0])
 
     return results_df
 
@@ -74,7 +117,7 @@ def create_diff_df(df, column, test_value, baseline_value, diff_column, columns_
     return df_merged
 
 
-def differences_distribution(df, column, test_value, baseline_value, diff_column, debug=False):
+def differences_distribution(df, column, test_value, baseline_value, diff_column, quartiles=False, numeric=False, debug=False):
     """
     Compute the distribution of differences between two groups in a DataFrame.
 
@@ -84,6 +127,8 @@ def differences_distribution(df, column, test_value, baseline_value, diff_column
         test_value: The value representing the test group.
         baseline_value: The value representing the baseline group.
         diff_column (str): The column name containing the values to compare.
+        quartiles (bool, optional): Whether to compute the quartiles. Defaults to False.
+        debug (bool, optional): Whether to print debug information. Defaults to False.
 
     Returns:
         pandas.DataFrame: A DataFrame containing the distribution of differences.
@@ -118,7 +163,7 @@ def differences_distribution(df, column, test_value, baseline_value, diff_column
         df_sorted = df_merged.sort_values(by=f'{diff_column}_diff')
         df_sorted.to_csv(f'debug/2_merged_data_{column}_{test_value}vs{baseline_value}.csv', sep=';', index=False)
     
-    results_df = compute_distribution(df_merged, f'{diff_column}_diff', column, f'{test_value} vs {baseline_value}', debug=debug)
+    results_df = compute_distribution(df_merged, f'{diff_column}_diff', column, f'{test_value} vs {baseline_value}', quartiles=quartiles, numeric=numeric, debug=debug)
     
     # TODO: Perform t-test on the differences
     # https://stackoverflow.com/questions/59694680/how-do-i-perform-a-t-test-from-a-dataframe
